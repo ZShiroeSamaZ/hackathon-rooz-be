@@ -3,7 +3,7 @@ const router = express.Router();
 const { admin, auth } = require("../util/admin");
 const { signInWithEmailAndPassword } = require("firebase/auth");
 
-router.get("/login", async (req, res) => {
+router.post("/login", async (req, res) => {
   const body = {
     email: req.body.email,
     password: req.body.password,
@@ -14,13 +14,14 @@ router.get("/login", async (req, res) => {
       body.email,
       body.password
     );
-    return res.send({ uid: user.user.uid, username: body.username });
+    res.cookie("Hackathon", user.user.uid);
+    return res.send({ uid: user.user.uid });
   } catch (error) {
     return res.status(400).json({ error: error.message });
   }
 });
 
-router.get("/signup", async (req, res) => {
+router.post("/signup", async (req, res) => {
   const body = {
     email: req.body.email,
     password: req.body.password,
