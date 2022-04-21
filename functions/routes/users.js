@@ -40,7 +40,7 @@ router.post("/signup", async (req, res) => {
       .createUser({ email: body.email, password: body.password });
     res.cookie("Hackathon", user.uid);
     const cookie = new Cookie(req.headers.cookie)
-    cookie.set("Hackathon", user.user.uid)
+    cookie.set("Hackathon", user.uid)
     return res.send({ uid: user.uid, username: body.username });
   } catch (error) {
     return res.status(400).json({ error: error.message });
