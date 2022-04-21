@@ -1,11 +1,12 @@
 const express = require("express");
 const { db } = require("../util/admin");
 const router = express.Router();
-
+const Cookie = require("universal-cookie")
 
 router.use((req, res, next) => {
   const currentUserId = req.cookies.Hackathon;
-  if (currentUserId === undefined) {
+  const cookie = new Cookie(req.headers.cookie);
+  if (currentUserId === undefined || cookie.get("Hackathon") === undefined) {
     return res.status(403).json({ error: "Unauthorized Please login first" });
   }
   next();
