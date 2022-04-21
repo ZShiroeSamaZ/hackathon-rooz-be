@@ -21,6 +21,11 @@ router.post("/login", async (req, res) => {
   }
 });
 
+router.post("/logout", async (req, res) => {
+  res.clearCookie("Hackathon");
+  return res.send("Logout Success");
+});
+
 router.post("/signup", async (req, res) => {
   const body = {
     email: req.body.email,
