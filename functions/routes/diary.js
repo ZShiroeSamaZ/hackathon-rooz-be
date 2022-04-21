@@ -4,18 +4,21 @@ const router = express.Router();
 
 router.use((req, res) => {
   const currentUserId = req.cookies.Hackathon;
-  if(currentUserId === undefined) {
+  if (currentUserId === undefined) {
     return res.status(403).json({ error: "Unauthorized Please login first" });
   }
   req.next();
-})
+});
 
 // @route   GET diary
 // @desc    Get all of user diary
 router.get("/", async (req, res) => {
   const userId = req.cookies.Hackathon;
   const diaryRef = await db.collection("Diary");
-  const diarys = await diaryRef.where("userId", "==", userId).get();
+  const diarys = await diaryRef
+    .where("userId", "==", userId)
+    .orderBy("date", "desc")
+    .get();
   const diarysArray = await diarys.docs.map((doc) => {
     return { ...doc.data(), diaryId: doc.id };
   });
@@ -27,8 +30,8 @@ router.get("/", async (req, res) => {
 router.post("/", async (req, res) => {
   const userId = req.cookies.Hackathon;
   const diaryRef = await db.collection("Diary");
-  const { title, content } = req.body;
-  const diaryId = await diaryRef.add({ title, content, userId });
+  const { title, content, date } = req.body;
+  const diaryId = await diaryRef.add({ title, content, userId, date });
   return res.send(diaryId);
 });
 
