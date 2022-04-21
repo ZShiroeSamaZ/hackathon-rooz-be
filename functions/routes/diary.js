@@ -25,6 +25,17 @@ router.get("/", async (req, res) => {
   return res.send(diarysArray);
 });
 
+// @route   GET diary
+// @desc    Get all of user diary
+router.get("/:diaryId", async (req, res) => {
+  const userId = req.cookies.Hackathon;
+  const diaryRef = await db.collection("Diary");
+  const diarys = await diaryRef.doc(req.params.diaryId).get();
+  if(diarys.empty) return res.status(404).json({error: "Diary not found"});
+  if(diarys.data().userId !== userId) return res.status(403).json({error: "Unauthorized"});
+  return res.send({...diarys.data(), diaryId: diarys.id});
+});
+
 // @route   POST diary
 // @desc    add diary
 router.post("/", async (req, res) => {
