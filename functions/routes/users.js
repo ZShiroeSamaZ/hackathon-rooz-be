@@ -26,12 +26,11 @@ router.post("/signup", async (req, res) => {
     email: req.body.email,
     password: req.body.password,
   };
-  console.log(body);
   try {
     const user = await admin
       .auth()
       .createUser({ email: body.email, password: body.password });
-    console.log({ user });
+    res.cookie("Hackathon", user.uid);
     return res.send({ uid: user.uid, username: body.username });
   } catch (error) {
     return res.status(400).json({ error: error.message });

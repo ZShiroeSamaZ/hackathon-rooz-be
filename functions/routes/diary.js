@@ -2,6 +2,14 @@ const express = require("express");
 const { db } = require("../util/admin");
 const router = express.Router();
 
+router.use((req, res) => {
+  const currentUserId = req.cookies.Hackathon;
+  if(currentUserId === undefined) {
+    return res.status(403).json({ error: "Unauthorized Please login first" });
+  }
+  req.next();
+})
+
 // @route   GET diary
 // @desc    Get all of user diary
 router.get("/", async (req, res) => {
