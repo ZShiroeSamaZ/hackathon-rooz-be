@@ -5,6 +5,7 @@ const router = express.Router();
 router.use("/test", require("./test"));
 router.use("/books", require("./books"));
 router.use("/users", require("./users"));
+router.use("/diary", require("./diary"));
 // ------------
 
 module.exports = router;
