@@ -5,8 +5,8 @@ const Cookie = require("universal-cookie")
 
 router.use((req, res, next) => {
   const currentUserId = req.cookies.Hackathon;
-  const cookie = new Cookie(req.headers.cookie);
-  if (currentUserId === undefined && cookie.get("Hackathon") === undefined) {
+  // const cookie = new Cookie(req.headers.cookie);
+  if (currentUserId === undefined) {
     return res.status(403).json({ error: "Unauthorized Please login first" });
   }
   next();
