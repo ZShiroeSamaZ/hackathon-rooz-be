@@ -2,6 +2,16 @@ const express = require("express");
 const { db } = require("../util/admin");
 const router = express.Router();
 
+router.use((req, res) => {
+  const currentUserId = req.cookies.Hackathon;
+  if(currentUserId === undefined) {
+    return res.status(403).json({ error: "Unauthorized Please login first" });
+  }
+  req.next();
+})
+
+// @route   GET diary
+// @desc    Get all of user diary
 router.get("/", async (req, res) => {
   const userId = req.cookies.Hackathon;
   const diaryRef = await db.collection("Diary");
@@ -12,6 +22,8 @@ router.get("/", async (req, res) => {
   return res.send(diarysArray);
 });
 
+// @route   POST diary
+// @desc    add diary
 router.post("/", async (req, res) => {
   const userId = req.cookies.Hackathon;
   const diaryRef = await db.collection("Diary");
@@ -20,6 +32,8 @@ router.post("/", async (req, res) => {
   return res.send(diaryId);
 });
 
+// @route   PATCH diary
+// @desc    edit diary
 router.patch("/", async (req, res) => {
   const { diaryId, title, content } = req.body;
   const currentUserId = req.cookies.Hackathon;
@@ -29,10 +43,13 @@ router.patch("/", async (req, res) => {
   const userId = diary.data().userId;
   if (userId !== currentUserId)
     return res.status(400).send("You are not authorized to edit this diary");
-  await diaryRef.update({ title, content });
+  if (title) diaryRef.update({ title });
+  if (content) diaryRef.update({ content });
   return res.send("Update Success");
 });
 
+// @route   DELETE diary
+// @desc    delete diary
 router.delete("/", async (req, res) => {
   const { diaryId } = req.body;
   const currentUserId = req.cookies.Hackathon;
